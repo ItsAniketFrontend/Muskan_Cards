@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muskan — Tarot & Numerology Readings</title>
+
+<!-- Bootstrap 5.3 -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --night: #0a0a0f;
+  --deep:  #10101a;
+  --card:  #13131f;
+  --border: rgba(190,155,90,.18);
+  --gold:  #c8a96e;
+  --gold-light: #e2c898;
+  --cream: #f0e8d8;
+  --muted: rgba(240,232,216,.45);
+  --faint: rgba(240,232,216,.15);
+  /* theme transition */
+  --transition-theme: background .4s ease, color .4s ease, border-color .4s ease;
+}
+
+/* ── LIGHT MODE OVERRIDES ── */
+body.light-mode {
+  --night: #faf7f2;
+  --deep:  #f2ece2;
+  --card:  #ede4d5;
+  --border: rgba(160,120,60,.2);
+  --gold:  #a0742a;
+  --gold-light: #8a5e1a;
+  --cream: #2a1f10;
+  --muted: rgba(42,31,16,.55);
+  --faint: rgba(42,31,16,.3);
+}
+body.light-mode::before { opacity: .18; }
+body.light-mode .hero { background: var(--night); }
+body.light-mode .hero-glow { background: radial-gradient(circle, rgba(160,120,60,.1) 0%, transparent 70%); }
+body.light-mode .hero-ring { border-color: rgba(160,120,60,.2); }
+body.light-mode .hero-ring-outer { border-color: rgba(160,120,60,.1); }
+body.light-mode .hero-ring::after { background: var(--gold); }
+body.light-mode .navbar-collapse { background: var(--deep); }
+@media (min-width: 992px) { body.light-mode .navbar-collapse { background: transparent; } }
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--night);
+  color: var(--cream);
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  line-height: 1.7;
+  overflow-x: hidden;
+  transition: var(--transition-theme);
+}
+body * { transition: background .4s ease, color .4s ease, border-color .4s ease; }
+
+/* ── THEME TOGGLE — sticky floating bottom-right ── */
+.theme-toggle {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 9998;
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--card);
+  box-shadow: 0 0 0 1px var(--border), 0 8px 32px rgba(0,0,0,.45), 0 0 20px rgba(200,169,110,.08);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--gold);
+  font-size: 1.15rem;
+  padding: 0;
+  transition: border-color .35s, box-shadow .35s, transform .35s, background .4s;
+}
+.theme-toggle:hover {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px var(--gold), 0 8px 36px rgba(0,0,0,.5), 0 0 28px rgba(200,169,110,.22);
+  transform: scale(1.1) rotate(15deg);
+}
+.theme-toggle:active { transform: scale(.95); }
+.theme-toggle .icon-sun  { display: none; }
+.theme-toggle .icon-moon { display: block; line-height: 1; }
+body.light-mode .theme-toggle .icon-sun  { display: block; line-height: 1; }
+body.light-mode .theme-toggle .icon-moon { display: none; }
+body.light-mode .theme-toggle {
+  box-shadow: 0 0 0 1px var(--border), 0 8px 32px rgba(0,0,0,.12), 0 0 20px rgba(160,120,60,.1);
+}
+@media (max-width: 575px) {
+  .theme-toggle { bottom: 1.4rem; right: 1.4rem; width: 46px; height: 46px; font-size: 1.05rem; }
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 9999; opacity: .5;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+/* ── HELPERS ── */
+.section-label {
+  font-size: .65rem; letter-spacing: .35em; text-transform: uppercase;
+  color: var(--gold); opacity: .85; display: block; margin-bottom: 1rem;
+}
+.section-title { font-family: 'Cormorant Garamond', serif; font-weight: 300; color: var(--cream); line-height: 1.2; }
+.text-muted-c { color: var(--muted) !important; }
+.gold-divider { width: 100%; height: 1px; background: linear-gradient(to right, transparent, var(--border), transparent); border: none; }
+
+/* ── BUTTONS ── */
+.btn-gold {
+  display: inline-block; padding: .85rem 2.2rem;
+  background: var(--gold); color: var(--night);
+  font-size: .73rem; letter-spacing: .2em; text-transform: uppercase; font-weight: 500;
+  text-decoration: none; border: none; transition: background .3s, transform .2s;
+  white-space: nowrap;
+}
+.btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); color: var(--night); }
+.btn-outline-gold {
+  display: inline-block; padding: .85rem 2.2rem;
+  border: 1px solid var(--border); color: var(--muted);
+  font-size: .73rem; letter-spacing: .2em; text-transform: uppercase;
+  text-decoration: none; background: transparent; transition: border-color .3s, color .3s;
+  white-space: nowrap;
+}
+.btn-outline-gold:hover { border-color: var(--gold); color: var(--gold-light); }
+
+/* ── NAVBAR ── */
+.site-nav { background: transparent; padding: 1.4rem 0; position: relative; z-index: 100; }
+.site-nav .navbar-brand {
+  font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 300;
+  letter-spacing: .25em; text-transform: uppercase; color: var(--gold-light);
+}
+.site-nav .navbar-brand:hover { color: var(--cream); }
+.site-nav .nav-link {
+  font-size: .7rem; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--muted); transition: color .3s; padding: .4rem .75rem !important;
+}
+.site-nav .nav-link:hover { color: var(--gold-light); }
+.site-nav .nav-cta {
+  padding: .48rem 1.2rem !important; border: 1px solid var(--border);
+  color: var(--gold) !important; transition: border-color .3s, color .3s;
+}
+.site-nav .nav-cta:hover { border-color: var(--gold); color: var(--gold-light) !important; }
+.navbar-toggler { border: 1px solid var(--border); padding: .35rem .65rem; }
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(200,169,110,0.8)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+.navbar-toggler:focus { box-shadow: none; }
+.navbar-collapse {
+  background: var(--deep); border: 1px solid var(--border);
+  padding: 1rem 1.5rem; margin-top: .5rem;
+}
+@media (min-width: 992px) {
+  .navbar-collapse { background: transparent; border: none; padding: 0; margin-top: 0; }
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh; background: var(--night);
+  display: flex; flex-direction: column; position: relative; overflow: hidden;
+}
+.hero-glow {
+  position: absolute;
+  width: min(700px,90vw); height: min(700px,90vw); border-radius: 50%;
+  background: radial-gradient(circle, rgba(200,169,110,.07) 0%, transparent 70%);
+  top: 50%; left: 50%; transform: translate(-50%,-52%); pointer-events: none;
+}
+.hero-ring {
+  position: absolute;
+  width: min(520px,78vw); height: min(520px,78vw); border-radius: 50%;
+  border: 1px solid rgba(200,169,110,.12);
+  top: 50%; left: 50%; transform: translate(-50%,-52%);
+  animation: slowspin 60s linear infinite; pointer-events: none;
+}
+.hero-ring::after {
+  content: ''; position: absolute; width: 8px; height: 8px; border-radius: 50%;
+  background: var(--gold); top: -4px; left: 50%; transform: translateX(-50%); opacity: .7;
+}
+.hero-ring-outer {
+  position: absolute;
+  width: min(660px,92vw); height: min(660px,92vw); border-radius: 50%;
+  border: 1px dashed rgba(200,169,110,.06);
+  top: 50%; left: 50%; transform: translate(-50%,-52%);
+  animation: slowspin 90s linear infinite reverse; pointer-events: none;
+}
+@keyframes slowspin { to { transform: translate(-50%,-52%) rotate(360deg); } }
+.hero-body {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  text-align: center; padding: 3rem 1rem; position: relative; z-index: 10;
+  animation: fadeUp 1.2s ease both;
+}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+.hero-eyebrow { font-size: .66rem; letter-spacing: .35em; text-transform: uppercase; color: var(--gold); opacity: .85; }
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.6rem, 9vw, 6.5rem); font-weight: 300;
+  line-height: 1.05; color: var(--cream);
+}
+.hero-title em { font-style: italic; color: var(--gold-light); }
+.hero-tagline { font-size: clamp(.88rem,2vw,1rem); color: var(--muted); max-width: 460px; margin: 0 auto; }
+.scroll-hint {
+  padding: 2rem; text-align: center; font-size: .66rem;
+  letter-spacing: .25em; text-transform: uppercase; color: var(--faint);
+  position: relative; z-index: 10; animation: fadeUp 1.6s .4s ease both;
+}
+
+/* ── ABOUT ── */
+.about-section { padding: 5.5rem 0; background: var(--night); }
+.promise-card {
+  background: var(--card); border: 1px solid var(--border);
+  padding: 1.3rem 1.5rem; display: flex; gap: 1.1rem;
+  align-items: flex-start; transition: border-color .3s;
+}
+.promise-card:hover { border-color: rgba(200,169,110,.4); }
+.promise-icon { font-size: 1.1rem; color: var(--gold); flex-shrink: 0; margin-top: .15rem; }
+.promise-card h4 { font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-weight: 400; color: var(--cream); margin-bottom: .2rem; }
+.promise-card p { font-size: .81rem; color: var(--muted); line-height: 1.65; margin: 0; }
+
+/* ── SERVICES ── */
+.services-section { background: var(--deep); padding: 5.5rem 0; }
+.service-card {
+  background: var(--deep); border: 1px solid var(--border);
+  padding: 2.4rem 2rem; height: 100%;
+  position: relative; overflow: hidden; transition: background .3s;
+}
+.service-card:hover { background: var(--card); }
+.service-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
+  opacity: 0; transition: opacity .3s;
+}
+.service-card:hover::before { opacity: 1; }
+.service-num { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 300; color: var(--faint); line-height: 1; margin-bottom: 1.2rem; }
+.service-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 400; color: var(--cream); margin-bottom: .65rem; }
+.service-card p { font-size: .84rem; color: var(--muted); line-height: 1.8; margin: 0; }
+.service-tag { display: inline-block; margin-top: 1.2rem; font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); opacity: .7; }
+
+/* ── CROSSROADS ── */
+.crossroads-section { padding: 5.5rem 0; background: var(--night); }
+.situation-tag {
+  padding: .42rem 1.05rem; border: 1px solid var(--border);
+  font-size: .75rem; color: var(--muted); letter-spacing: .07em;
+  transition: border-color .3s, color .3s; display: inline-block;
+}
+.situation-tag:hover { border-color: var(--gold); color: var(--gold-light); }
+
+/* ── EXPERIENCE ── */
+.experience-section { background: var(--deep); padding: 5.5rem 0; }
+.steps-row { position: relative; }
+.steps-row::before {
+  content: ''; position: absolute;
+  top: 22px; left: 10%; right: 10%; height: 1px;
+  background: var(--border); z-index: 0;
+}
+@media (max-width: 767px) { .steps-row::before { display: none; } }
+.step-item { text-align: center; position: relative; z-index: 1; }
+.step-dot {
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--deep);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 1.4rem;
+  font-family: 'Cormorant Garamond', serif; font-size: .9rem; color: var(--gold);
+  transition: border-color .3s, background .3s;
+}
+.step-item:hover .step-dot { border-color: var(--gold); background: var(--card); }
+.step-item h4 { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 400; color: var(--cream); margin-bottom: .45rem; }
+.step-item p { font-size: .81rem; color: var(--muted); line-height: 1.7; }
+
+/* ── PRICING ── */
+.pricing-section { padding: 5.5rem 0; background: var(--night); }
+.price-card {
+  background: var(--night); border: 1px solid var(--border);
+  padding: 2.4rem 2rem; height: 100%;
+  display: flex; flex-direction: column; position: relative; transition: background .3s;
+}
+.price-card:hover { background: var(--card); }
+.price-card.featured { background: var(--card); border-color: rgba(200,169,110,.35); }
+.price-card.featured::before {
+  content: 'Most Popular';
+  position: absolute; top: -1px; right: 1.5rem;
+  background: var(--gold); color: var(--night);
+  font-size: .58rem; letter-spacing: .18em; text-transform: uppercase; font-weight: 500;
+  padding: .26rem .7rem;
+}
+.price-label { font-size: .6rem; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); opacity: .8; margin-bottom: .5rem; display: block; }
+.price-name { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 400; color: var(--cream); margin-bottom: 1.1rem; }
+.price-amount { display: flex; align-items: flex-start; gap: .12rem; margin-bottom: .25rem; }
+.price-currency { font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: var(--gold); margin-top: .3rem; }
+.price-number { font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 300; color: var(--cream); line-height: 1; }
+.price-dur { font-size: .72rem; color: var(--muted); margin-bottom: 1.3rem; }
+.price-divider { height: 1px; background: var(--border); margin-bottom: 1.3rem; }
+.price-features { list-style: none; padding: 0; flex: 1; margin-bottom: 1.5rem; }
+.price-features li { font-size: .81rem; color: var(--muted); padding: .38rem 0; display: flex; gap: .65rem; line-height: 1.5; }
+.price-features li::before { content: '◦'; color: var(--gold); flex-shrink: 0; opacity: .7; }
+.price-cta {
+  display: block; text-align: center; padding: .72rem;
+  border: 1px solid var(--border); font-size: .68rem; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--muted); text-decoration: none;
+  transition: all .3s; margin-top: auto;
+}
+.price-cta:hover, .price-card.featured .price-cta { border-color: var(--gold); color: var(--gold-light); }
+
+/* ── TESTIMONIALS SLIDER ── */
+.testimonials-section { background: var(--deep); padding: 5.5rem 0; overflow: hidden; }
+.slider-viewport { overflow: hidden; position: relative; cursor: grab; user-select: none; }
+.slider-viewport.is-dragging { cursor: grabbing; }
+.slider-track { display: flex; transition: transform .55s cubic-bezier(.4,0,.2,1); will-change: transform; }
+.testimonial-slide {
+  flex-shrink: 0; padding: 2.2rem;
+  background: var(--deep); border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; box-sizing: border-box; transition: background .3s;
+}
+.testimonial-slide:hover { background: var(--card); }
+.quote-mark { font-family: 'Cormorant Garamond', serif; font-size: 4.5rem; line-height: .6; color: var(--gold); opacity: .18; margin-bottom: 1.1rem; display: block; }
+.slide-stars { color: var(--gold); font-size: .6rem; letter-spacing: .15em; opacity: .7; margin-bottom: .9rem; }
+.slide-text { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-style: italic; font-weight: 300; color: var(--cream); line-height: 1.75; flex: 1; margin-bottom: 1.5rem; opacity: .88; }
+.slide-author { display: flex; align-items: center; gap: .9rem; }
+.author-avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--card); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', serif; font-size: .82rem; color: var(--gold); flex-shrink: 0;
+}
+.author-name { font-size: .76rem; color: var(--cream); letter-spacing: .05em; }
+.author-meta { font-size: .66rem; color: var(--muted); }
+.slider-controls { display: flex; align-items: center; gap: 1rem; margin-top: 2rem; flex-wrap: wrap; }
+.slider-dots { display: flex; gap: .5rem; align-items: center; }
+.slider-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--faint); border: none; cursor: pointer; transition: background .3s, transform .3s; padding: 0; }
+.slider-dot.active { background: var(--gold); transform: scale(1.5); }
+.slider-progress { flex: 1; min-width: 40px; height: 1px; background: var(--border); position: relative; overflow: hidden; }
+.slider-progress-bar { position: absolute; top: 0; left: 0; height: 100%; background: var(--gold); opacity: .65; transition: width .55s cubic-bezier(.4,0,.2,1); }
+.slider-arrows { display: flex; gap: .6rem; margin-left: auto; }
+.slider-arrow {
+  width: 40px; height: 40px; border: 1px solid var(--border);
+  background: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--muted); font-size: .82rem; transition: border-color .3s, color .3s;
+}
+.slider-arrow:hover { border-color: var(--gold); color: var(--gold-light); }
+.slider-arrow:disabled { opacity: .2; cursor: not-allowed; }
+
+/* ── FAQ ── */
+.faq-section { padding: 5.5rem 0; background: var(--night); }
+.faq-item { border-bottom: 1px solid var(--border); }
+.faq-item:first-child { border-top: 1px solid var(--border); }
+.faq-btn {
+  width: 100%; background: none; border: none;
+  padding: 1.3rem 0; display: flex; justify-content: space-between;
+  align-items: center; gap: 1rem; cursor: pointer; text-align: left;
+}
+.faq-btn span { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 400; color: var(--cream); line-height: 1.4; transition: color .3s; }
+.faq-btn:hover span { color: var(--gold-light); }
+.faq-icon { width: 22px; height: 22px; border: 1px solid var(--border); border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: .72rem; transition: transform .3s, border-color .3s; }
+.faq-item.open .faq-icon { transform: rotate(45deg); border-color: var(--gold); }
+.faq-answer { max-height: 0; overflow: hidden; transition: max-height .4s ease; }
+.faq-answer-inner { padding-bottom: 1.3rem; font-size: .87rem; color: var(--muted); line-height: 1.85; }
+.faq-item.open .faq-answer { max-height: 300px; }
+
+/* ── BOOKING ── */
+.booking-section {
+  background: var(--card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  padding: 5.5rem 0; position: relative; overflow: hidden;
+}
+.booking-section::before {
+  content: ''; position: absolute; width: 600px; height: 600px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(200,169,110,.05) 0%, transparent 70%);
+  top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none;
+}
+
+/* ── FOOTER ── */
+.site-footer { padding: 2.5rem 0; border-top: 1px solid var(--border); background: var(--night); }
+.footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 300; letter-spacing: .25em; text-transform: uppercase; color: var(--gold-light); }
+.footer-caption { font-size: .7rem; color: var(--faint); letter-spacing: .08em; }
+.footer-link { font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); text-decoration: none; transition: color .3s; }
+.footer-link:hover { color: var(--gold); }
+
+/* ── RESPONSIVE FINE-TUNING ── */
+@media (max-width: 575px) {
+  .hero-title { font-size: clamp(2.3rem,12vw,3.1rem); }
+  .about-section,.services-section,.crossroads-section,.experience-section,
+  .pricing-section,.testimonials-section,.faq-section,.booking-section { padding: 3.5rem 0; }
+  .slider-progress { display: none; }
+  .service-card, .price-card { margin-bottom: 1px; }
+}
+@media (max-width: 767px) {
+  .slider-progress { display: none; }
+  .steps-row::before { display: none; }
+}
+@media (min-width: 576px) and (max-width: 767px) {
+  .hero-title { font-size: clamp(2.8rem, 8vw, 4rem); }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg site-nav">
+  <div class="container">
+    <a class="navbar-brand" href="#">Muskan</a>
+    <button class="navbar-toggler" type="button"
+      data-bs-toggle="collapse" data-bs-target="#mainNav"
+      aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="mainNav">
+      <ul class="navbar-nav align-items-lg-center gap-lg-1 gap-2 mt-2 mt-lg-0">
+        <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
+        <li class="nav-item"><a class="nav-link" href="#experience">Experience</a></li>
+        <li class="nav-item"><a class="nav-link" href="#pricing">Pricing</a></li>
+        <li class="nav-item"><a class="nav-link" href="#testimonials">Reviews</a></li>
+        <li class="nav-item"><a class="nav-link" href="#faq">FAQ</a></li>
+        <li class="nav-item ms-lg-2"><a class="nav-link nav-cta" href="#book">Book a Reading</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-ring-outer"></div>
+  <div class="hero-ring"></div>
+  <div class="hero-body">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-sm-11 col-md-9 col-lg-8">
+          <p class="hero-eyebrow mb-3">Tarot &nbsp;·&nbsp; Numerology &nbsp;·&nbsp; Private Readings</p>
+          <h1 class="hero-title mb-4">When you're standing<br>at a <em>crossroads</em></h1>
+          <p class="hero-tagline mb-4">Private tarot and numerology readings for moments that matter — in love, career, or life. Clear, grounded, and entirely judgment-free.</p>
+          <div class="d-flex flex-wrap gap-3 justify-content-center mt-4">
+            <a href="#book" class="btn-gold">Book Your Reading</a>
+            <a href="#services" class="btn-outline-gold">What I Offer</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="scroll-hint">↓ &nbsp; Scroll to explore</p>
+</section>
+
+<hr class="gold-divider m-0">
+
+<!-- ABOUT -->
+<section class="about-section">
+  <div class="container">
+    <div class="row align-items-center g-4 g-lg-5">
+      <div class="col-12 col-lg-5">
+        <span class="section-label">About Muskan</span>
+        <h2 class="section-title mb-4" style="font-size:clamp(1.9rem,3.5vw,2.8rem);">In your corner.<br>From the first card.</h2>
+        <p class="text-muted-c mb-3" style="font-size:.95rem;line-height:1.85;">I'm Muskan. I offer private tarot and numerology readings for people navigating real crossroads — not abstract ones. The kind where the decision keeps you up at night.</p>
+        <p class="text-muted-c mb-0" style="font-size:.95rem;line-height:1.85;">No spells. No crystals. No upselling. Just a clear, honest reading from someone who takes your situation seriously and is entirely rooting for you.</p>
+      </div>
+      <div class="col-12 col-lg-6 offset-lg-1">
+        <div class="d-flex flex-column gap-3">
+          <div class="promise-card">
+            <span class="promise-icon">◈</span>
+            <div><h4>No pressure, ever</h4><p>Come for one reading. That's enough. I'll never encourage you to book more than what you came for.</p></div>
+          </div>
+          <div class="promise-card">
+            <span class="promise-icon">◈</span>
+            <div><h4>Judgment-free space</h4><p>Relationships, identity, regret, desire — bring all of it. Nothing you say will change how I show up for you.</p></div>
+          </div>
+          <div class="promise-card">
+            <span class="promise-icon">◈</span>
+            <div><h4>Grounded readings</h4><p>Clarity, not prophecy. I won't tell you what will happen — I'll help you see what you already know.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="gold-divider m-0">
+
+<!-- SERVICES -->
+<section class="services-section" id="services">
+  <div class="container">
+    <div class="text-center mb-5">
+      <span class="section-label">What I Offer</span>
+      <h2 class="section-title" style="font-size:clamp(2rem,3.5vw,3rem);">Choose your reading</h2>
+    </div>
+    <div class="row g-1">
+      <div class="col-12 col-md-4">
+        <div class="service-card h-100">
+          <div class="service-num">01</div>
+          <h3>Tarot Reading</h3>
+          <p>A focused card reading around a specific question, situation, or feeling you're carrying. We go deep — not broad.</p>
+          <span class="service-tag">Love · Career · Life Path</span>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="service-card h-100">
+          <div class="service-num">02</div>
+          <h3>Numerology Reading</h3>
+          <p>Your birth date and name hold a pattern. I'll read your core numbers and show you what they say about where you are right now.</p>
+          <span class="service-tag">Life Number · Name Reading</span>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="service-card h-100">
+          <div class="service-num">03</div>
+          <h3>Combined Session</h3>
+          <p>Tarot and numerology together, woven around your specific crossroads. For when you want the fullest picture possible.</p>
+          <span class="service-tag">Deep Dive · Full Session</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO ITS FOR -->
+<section class="crossroads-section">
+  <div class="container">
+    <div class="row justify-content-center text-center">
+      <div class="col-12 col-md-9 col-lg-7">
+        <span class="section-label">Who This Is For</span>
+        <h2 class="section-title mb-4" style="font-size:clamp(1.9rem,4vw,3.2rem);">You don't need to be <em style="font-style:italic;color:var(--gold-light)">lost</em> —<br>you just need to see clearly</h2>
+        <p class="text-muted-c mb-2" style="font-size:1rem;line-height:1.85;">Most of my clients aren't in crisis. They're thoughtful people in the middle of something real — and they want one honest conversation outside of it.</p>
+        <div class="d-flex flex-wrap gap-2 justify-content-center my-4">
+          <span class="situation-tag">Leaving a relationship</span>
+          <span class="situation-tag">Career pivot</span>
+          <span class="situation-tag">Feeling stuck</span>
+          <span class="situation-tag">A decision that won't resolve</span>
+          <span class="situation-tag">New chapter, uncertain start</span>
+          <span class="situation-tag">Reconnecting with yourself</span>
+          <span class="situation-tag">Grief &amp; transition</span>
+          <span class="situation-tag">Just curious</span>
+        </div>
+        <p class="text-muted-c" style="font-size:1rem;">All of it is welcome here.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="gold-divider m-0">
+
+<!-- SESSION EXPERIENCE -->
+<section class="experience-section" id="experience">
+  <div class="container">
+    <div class="row mb-5">
+      <div class="col-12 col-md-8 col-lg-5">
+        <span class="section-label">The Session Experience</span>
+        <h2 class="section-title mb-3" style="font-size:clamp(1.8rem,3.5vw,2.7rem);">What a reading actually looks like</h2>
+        <p class="text-muted-c mb-0" style="font-size:.9rem;line-height:1.85;">No theatrics. No incense. Just you, me, and an honest conversation that holds your situation with care.</p>
+      </div>
+    </div>
+    <div class="row g-4 g-lg-0 steps-row">
+      <div class="col-6 col-lg-3">
+        <div class="step-item">
+          <div class="step-dot">I</div>
+          <h4>You reach out</h4>
+          <p>Send a brief message — your name, what's on your mind, and which reading feels right.</p>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="step-item">
+          <div class="step-dot">II</div>
+          <h4>We schedule</h4>
+          <p>I'll confirm a time. Sessions happen over video or voice — your comfort, your choice.</p>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="step-item">
+          <div class="step-dot">III</div>
+          <h4>The reading</h4>
+          <p>We begin. I draw or interpret, and we talk through what comes up — openly, without judgment.</p>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="step-item">
+          <div class="step-dot">IV</div>
+          <h4>You leave with clarity</h4>
+          <p>Not predictions — a clearer sense of where you are, what you know, and what's next.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="gold-divider m-0">
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="container">
+    <div class="text-center mb-5">
+      <span class="section-label">Pricing</span>
+      <h2 class="section-title" style="font-size:clamp(2rem,3.5vw,3rem);">Simple, transparent, no surprises</h2>
+    </div>
+    <div class="row g-1 justify-content-center">
+      <div class="col-12 col-md-4">
+        <div class="price-card h-100">
+          <span class="price-label">Tarot</span>
+          <div class="price-name">Tarot Reading</div>
+          <div class="price-amount"><span class="price-currency">₹</span><span class="price-number">1,200</span></div>
+          <div class="price-dur">45-minute session</div>
+          <div class="price-divider"></div>
+          <ul class="price-features">
+            <li>One focused question or situation</li>
+            <li>Full card spread &amp; interpretation</li>
+            <li>Live session via video or voice</li>
+            <li>Space for questions throughout</li>
+          </ul>
+          <a href="#book" class="price-cta">Book This Reading</a>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="price-card featured h-100">
+          <span class="price-label">Numerology</span>
+          <div class="price-name">Numerology Reading</div>
+          <div class="price-amount"><span class="price-currency">₹</span><span class="price-number">1,500</span></div>
+          <div class="price-dur">60-minute session</div>
+          <div class="price-divider"></div>
+          <ul class="price-features">
+            <li>Life path, expression &amp; soul number</li>
+            <li>Name &amp; birth date analysis</li>
+            <li>Current year &amp; cycle reading</li>
+            <li>Live session via video or voice</li>
+            <li>Written summary sent after</li>
+          </ul>
+          <a href="#book" class="price-cta">Book This Reading</a>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="price-card h-100">
+          <span class="price-label">Combined</span>
+          <div class="price-name">Full Session</div>
+          <div class="price-amount"><span class="price-currency">₹</span><span class="price-number">2,400</span></div>
+          <div class="price-dur">90-minute session</div>
+          <div class="price-divider"></div>
+          <ul class="price-features">
+            <li>Tarot + numerology, fully integrated</li>
+            <li>Deeper exploration of your crossroads</li>
+            <li>Live session via video or voice</li>
+            <li>Written summary sent after</li>
+            <li>One follow-up question via message</li>
+          </ul>
+          <a href="#book" class="price-cta">Book This Reading</a>
+        </div>
+      </div>
+    </div>
+    <p class="text-center mt-4" style="font-size:.73rem;color:var(--faint);letter-spacing:.05em;">All sessions private &amp; by appointment only &nbsp;·&nbsp; Payment confirmed at booking</p>
+  </div>
+</section>
+
+<hr class="gold-divider m-0">
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-section" id="testimonials">
+  <div class="container">
+    <div class="text-center mb-5">
+      <span class="section-label">What Clients Say</span>
+      <h2 class="section-title" style="font-size:clamp(2rem,3.5vw,3rem);">Words from the room</h2>
+    </div>
+    <div class="slider-viewport" id="sliderViewport">
+      <div class="slider-track" id="sliderTrack">
+        <div class="testimonial-slide">
+          <span class="quote-mark">"</span>
+          <div class="slide-stars">★ ★ ★ ★ ★</div>
+          <p class="slide-text">I came in completely tangled about a career decision I'd been avoiding for months. Muskan didn't tell me what to do — she helped me hear what I already knew. I left with actual clarity, not just comfort.</p>
+          <div class="slide-author"><div class="author-avatar">R</div><div><div class="author-name">Rhea M.</div><div class="author-meta">Combined Session · Mumbai</div></div></div>
+        </div>
+        <div class="testimonial-slide">
+          <span class="quote-mark">"</span>
+          <div class="slide-stars">★ ★ ★ ★ ★</div>
+          <p class="slide-text">I was skeptical, but a friend insisted. The numerology reading was strangely accurate — not vague, but specific to things I hadn't even told her. The written summary alone was worth it.</p>
+          <div class="slide-author"><div class="author-avatar">A</div><div><div class="author-name">Arjun T.</div><div class="author-meta">Numerology Reading · Bangalore</div></div></div>
+        </div>
+        <div class="testimonial-slide">
+          <span class="quote-mark">"</span>
+          <div class="slide-stars">★ ★ ★ ★ ★</div>
+          <p class="slide-text">What I appreciated most was that she never pushed me toward anything. No follow-up upsell, no dramatic predictions. Just a real, grounded conversation that I still think about weeks later.</p>
+          <div class="slide-author"><div class="author-avatar">S</div><div><div class="author-name">Simran K.</div><div class="author-meta">Tarot Reading · Delhi</div></div></div>
+        </div>
+        <div class="testimonial-slide">
+          <span class="quote-mark">"</span>
+          <div class="slide-stars">★ ★ ★ ★ ★</div>
+          <p class="slide-text">The session felt like a conversation with someone who was entirely in my corner. She asked good questions, listened carefully, and never made me feel judged. A really rare quality.</p>
+          <div class="slide-author"><div class="author-avatar">P</div><div><div class="author-name">Priya N.</div><div class="author-meta">Tarot Reading · Pune</div></div></div>
+        </div>
+        <div class="testimonial-slide">
+          <span class="quote-mark">"</span>
+          <div class="slide-stars">★ ★ ★ ★ ★</div>
+          <p class="slide-text">I booked the full session during a really difficult period — leaving a long relationship, uncertain about everything. The reading didn't fix anything, but it helped me feel less lost. That mattered more than I expected.</p>
+          <div class="slide-author"><div class="author-avatar">K</div><div><div class="author-name">Kavya R.</div><div class="author-meta">Combined Session · Hyderabad</div></div></div>
+        </div>
+        <div class="testimonial-slide">
+          <span class="quote-mark">"</span>
+          <div class="slide-stars">★ ★ ★ ★ ★</div>
+          <p class="slide-text">Muskan has a calm, steady presence that made it very easy to open up. The numerology reading connected threads in my life in a way I hadn't been able to see on my own. Really thoughtful work.</p>
+          <div class="slide-author"><div class="author-avatar">V</div><div><div class="author-name">Varun S.</div><div class="author-meta">Numerology Reading · Chennai</div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="slider-controls mt-4">
+      <div class="slider-dots" id="sliderDots"></div>
+      <div class="slider-progress"><div class="slider-progress-bar" id="sliderProgressBar"></div></div>
+      <div class="slider-arrows">
+        <button class="slider-arrow" id="prevBtn" aria-label="Previous">←</button>
+        <button class="slider-arrow" id="nextBtn" aria-label="Next">→</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="gold-divider m-0">
+
+<!-- FAQ -->
+<section class="faq-section" id="faq">
+  <div class="container">
+    <div class="text-center mb-5">
+      <span class="section-label">Questions</span>
+      <h2 class="section-title" style="font-size:clamp(2rem,3.5vw,3rem);">Things people often ask</h2>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-10 col-lg-8">
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)"><span>Do I need to believe in tarot for this to work?</span><div class="faq-icon">+</div></button>
+          <div class="faq-answer"><div class="faq-answer-inner">Not at all. Many of my clients come in skeptical — that's completely fine. I think of tarot and numerology as reflective tools, not magic. They give us a frame to look at a situation from a different angle. Whether you believe or not, something usually lands.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)"><span>Do I need to prepare anything before the session?</span><div class="faq-icon">+</div></button>
+          <div class="faq-answer"><div class="faq-answer-inner">No preparation needed. You can come with a specific question, a general theme, or just a feeling of being stuck. We'll find the right place to begin together. The only thing I'd suggest is giving yourself a few quiet minutes before we start.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)"><span>Will you tell me what's going to happen?</span><div class="faq-icon">+</div></button>
+          <div class="faq-answer"><div class="faq-answer-inner">No. I don't do predictive readings and I won't tell you what will happen — because I genuinely don't believe that's knowable. What I will do is help you see your situation more clearly, so that whatever you decide feels more like yours.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)"><span>Are sessions confidential?</span><div class="faq-icon">+</div></button>
+          <div class="faq-answer"><div class="faq-answer-inner">Completely. Everything shared in a session stays between us. I don't discuss clients with other clients, and I don't share any details from readings — not even anonymously. The session is a private space, full stop.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)"><span>What if I want to ask about a relationship or another person?</span><div class="faq-icon">+</div></button>
+          <div class="faq-answer"><div class="faq-answer-inner">That's very common. We can explore relationships and situations involving others — but I keep the focus on you: how you're feeling, what you need, what your choices are. I won't read another person in their absence beyond what's relevant to your own path.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn" onclick="toggleFaq(this)"><span>How and when do I pay?</span><div class="faq-icon">+</div></button>
+          <div class="faq-answer"><div class="faq-answer-inner">Payment is after the session — once we're done and you're satisfied. I accept UPI and bank transfer. I prefer it this way because I want you to feel the value came first.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING CTA -->
+<section class="booking-section" id="book">
+  <div class="container text-center position-relative" style="z-index:2;">
+    <span class="section-label d-block text-center">Book a Reading</span>
+    <h2 class="section-title mb-3" style="font-size:clamp(2.2rem,4vw,3.5rem);">Ready when you are</h2>
+    <p class="text-muted-c mx-auto mb-4" style="max-width:480px;font-size:.95rem;line-height:1.8;">Sessions are private, one-on-one, and entirely focused on you. No preparation needed — just bring your question, or even just a feeling.</p>
+    <div class="d-flex flex-wrap gap-3 justify-content-center">
+      <a href="mailto:hello@muskan.com" class="btn-gold">Email to Book</a>
+      <a href="#pricing" class="btn-outline-gold">View Pricing</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="row align-items-center gy-3 text-center text-md-start">
+      <div class="col-12 col-md-3">
+        <span class="footer-logo">Muskan</span>
+      </div>
+      <div class="col-12 col-md-5 text-center">
+        <p class="footer-caption mb-0">Private Tarot &amp; Numerology &nbsp;·&nbsp; By appointment only</p>
+      </div>
+      <div class="col-12 col-md-4 text-md-end">
+        <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-md-end">
+          <a href="#experience" class="footer-link">Experience</a>
+          <a href="#pricing" class="footer-link">Pricing</a>
+          <a href="#faq" class="footer-link">FAQ</a>
+          <a href="mailto:hello@muskan.com" class="footer-link">Contact</a>
+          <a href="#book" class="footer-link">Book</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- STICKY THEME TOGGLE -->
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">
+  <span class="icon-moon">☽</span>
+  <span class="icon-sun">☀</span>
+</button>
+
+<!-- Bootstrap 5 JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+/* ── FAQ ── */
+function toggleFaq(btn) {
+  var item = btn.parentElement;
+  var isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(function(el){ el.classList.remove('open'); });
+  if (!isOpen) item.classList.add('open');
+}
+
+/* ── TESTIMONIAL SLIDER ── */
+(function() {
+  var vp      = document.getElementById('sliderViewport');
+  var track   = document.getElementById('sliderTrack');
+  var dotsEl  = document.getElementById('sliderDots');
+  var progBar = document.getElementById('sliderProgressBar');
+  var prevBtn = document.getElementById('prevBtn');
+  var nextBtn = document.getElementById('nextBtn');
+  var slides  = Array.from(track.querySelectorAll('.testimonial-slide'));
+  var total   = slides.length;
+  var cur     = 0;
+  var timer   = null;
+
+  function perView() {
+    var w = vp.offsetWidth;
+    if (w < 576) return 1;
+    if (w < 900) return 2;
+    return 3;
+  }
+  function maxIdx() { return Math.max(0, total - perView()); }
+
+  function setWidths() {
+    var w = vp.offsetWidth / perView();
+    slides.forEach(function(s){ s.style.minWidth = w + 'px'; s.style.maxWidth = w + 'px'; });
+  }
+
+  function buildDots() {
+    dotsEl.innerHTML = '';
+    for (var i = 0; i <= maxIdx(); i++) {
+      var d = document.createElement('button');
+      d.className = 'slider-dot' + (i === cur ? ' active' : '');
+      d.setAttribute('aria-label', 'Slide ' + (i + 1));
+      (function(idx){ d.addEventListener('click', function(){ goTo(idx); resetTimer(); }); })(i);
+      dotsEl.appendChild(d);
+    }
+  }
+
+  function syncUI() {
+    dotsEl.querySelectorAll('.slider-dot').forEach(function(d, i){ d.classList.toggle('active', i === cur); });
+    progBar.style.width = (maxIdx() === 0 ? 100 : (cur / maxIdx()) * 100) + '%';
+    prevBtn.disabled = cur === 0;
+    nextBtn.disabled = cur >= maxIdx();
+  }
+
+  function goTo(idx) {
+    cur = Math.max(0, Math.min(idx, maxIdx()));
+    track.style.transform = 'translateX(-' + (cur * slides[0].offsetWidth) + 'px)';
+    syncUI();
+  }
+
+  function next() { goTo(cur < maxIdx() ? cur + 1 : 0); }
+  function prev() { goTo(cur > 0 ? cur - 1 : maxIdx()); }
+
+  function resetTimer() {
+    clearInterval(timer);
+    timer = setInterval(next, 4500);
+  }
+
+  function init() { setWidths(); buildDots(); goTo(0); resetTimer(); }
+
+  prevBtn.addEventListener('click', function(){ prev(); resetTimer(); });
+  nextBtn.addEventListener('click', function(){ next(); resetTimer(); });
+
+  window.addEventListener('resize', function(){
+    setWidths(); buildDots(); goTo(Math.min(cur, maxIdx()));
+  });
+
+  var dragX = 0, dragging = false;
+  vp.addEventListener('mousedown', function(e){ dragging = true; dragX = e.clientX; vp.classList.add('is-dragging'); });
+  window.addEventListener('mouseup', function(e){
+    if (!dragging) return;
+    dragging = false; vp.classList.remove('is-dragging');
+    if (Math.abs(e.clientX - dragX) > 50) { e.clientX < dragX ? next() : prev(); resetTimer(); }
+  });
+  vp.addEventListener('touchstart', function(e){ dragX = e.touches[0].clientX; }, { passive: true });
+  vp.addEventListener('touchend', function(e){
+    var diff = e.changedTouches[0].clientX - dragX;
+    if (Math.abs(diff) > 50) { diff < 0 ? next() : prev(); resetTimer(); }
+  });
+
+  init();
+})();
+
+/* ── THEME TOGGLE ── */
+(function() {
+  var btn  = document.getElementById('themeToggle');
+  var body = document.body;
+  var key  = 'muskan-theme';
+
+  // Restore saved preference on load
+  if (localStorage.getItem(key) === 'light') body.classList.add('light-mode');
+
+  btn.addEventListener('click', function() {
+    body.classList.toggle('light-mode');
+    localStorage.setItem(key, body.classList.contains('light-mode') ? 'light' : 'dark');
+  });
+})();
+</script>
+</body>
+</html>
