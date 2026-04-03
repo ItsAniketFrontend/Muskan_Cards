@@ -42,6 +42,7 @@
       font-weight: 300;
       line-height: 1.7;
       overflow-x: hidden;
+      position: relative;
     }
 
     body::before {
@@ -612,7 +613,24 @@
     /* CROSSROADS */
     .crossroads-section {
       padding: 5.5rem 0;
-      background: var(--deep);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .crossroads-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url('/Images/bg.jpg');
+      background-size: cover;
+      background-position: center top;
+      filter: grayscale(40%) sepia(30%) brightness(0.22);
+      z-index: 0;
+    }
+
+    .crossroads-section > * {
+      position: relative;
+      z-index: 1;
     }
 
     .situation-tag {
@@ -769,16 +787,16 @@
     }
 
     .tier-price {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.9rem;
-      font-weight: 300;
+      font-family: 'Jost', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 400;
       color: var(--gold-light);
       white-space: nowrap;
       line-height: 1;
     }
 
     .tier-price sup {
-      font-size: .85rem;
+      font-size: .75rem;
       vertical-align: super;
       margin-right: .1rem;
       color: var(--gold);
@@ -1171,6 +1189,43 @@
       }
     }
 
+    /* ── TAROT BACKGROUND ELEMENTS ── */
+    .tarot-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .tarot-card-float {
+      position: absolute;
+      opacity: .045;
+      fill: var(--green);
+    }
+
+    /* ── SHELTER BANNER ── */
+    .shelter-banner {
+      background: var(--deep);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 1.2rem 0;
+      text-align: center;
+    }
+
+    .shelter-banner p {
+      font-size: .82rem;
+      color: var(--muted);
+      letter-spacing: .04em;
+      margin: 0;
+      line-height: 1.7;
+    }
+
+    .shelter-banner strong {
+      color: var(--gold-light);
+      font-weight: 500;
+    }
+
     /* ── GREEN THEME FINE-TUNE ── */
     .hero-ring::after {
       background: var(--green) !important;
@@ -1234,6 +1289,21 @@
 
 <body>
 
+  <!-- TAROT BACKGROUND ELEMENTS -->
+  <div class="tarot-bg" aria-hidden="true">
+    <svg class="tarot-card-float" style="width:90px;top:8%;left:4%;transform:rotate(-18deg);" viewBox="0 0 60 100"><rect x="2" y="2" width="56" height="96" rx="5" ry="5" stroke="currentColor" stroke-width="2" fill="none"/><rect x="7" y="7" width="46" height="86" rx="3" ry="3" stroke="currentColor" stroke-width="1" fill="none"/><circle cx="30" cy="35" r="10" stroke="currentColor" stroke-width="1.5" fill="none"/><line x1="30" y1="10" x2="30" y2="20" stroke="currentColor" stroke-width="1"/><line x1="20" y1="14" x2="25" y2="22" stroke="currentColor" stroke-width="1"/><line x1="40" y1="14" x2="35" y2="22" stroke="currentColor" stroke-width="1"/><text x="30" y="65" text-anchor="middle" font-size="8" fill="currentColor" font-family="serif">&#9790;</text><text x="30" y="80" text-anchor="middle" font-size="6" fill="currentColor" font-family="serif">THE MOON</text></svg>
+
+    <svg class="tarot-card-float" style="width:70px;top:22%;right:3%;transform:rotate(12deg);" viewBox="0 0 60 100"><rect x="2" y="2" width="56" height="96" rx="5" ry="5" stroke="currentColor" stroke-width="2" fill="none"/><rect x="7" y="7" width="46" height="86" rx="3" ry="3" stroke="currentColor" stroke-width="1" fill="none"/><line x1="30" y1="12" x2="30" y2="55" stroke="currentColor" stroke-width="1.5"/><line x1="20" y1="22" x2="40" y2="22" stroke="currentColor" stroke-width="1.5"/><circle cx="30" cy="65" r="8" stroke="currentColor" stroke-width="1.5" fill="none"/><text x="30" y="85" text-anchor="middle" font-size="6" fill="currentColor" font-family="serif">THE STAR</text></svg>
+
+    <svg class="tarot-card-float" style="width:80px;top:55%;left:2%;transform:rotate(8deg);" viewBox="0 0 60 100"><rect x="2" y="2" width="56" height="96" rx="5" ry="5" stroke="currentColor" stroke-width="2" fill="none"/><rect x="7" y="7" width="46" height="86" rx="3" ry="3" stroke="currentColor" stroke-width="1" fill="none"/><polygon points="30,12 38,32 58,32 43,45 49,65 30,52 11,65 17,45 2,32 22,32" stroke="currentColor" stroke-width="1.5" fill="none"/><text x="30" y="85" text-anchor="middle" font-size="6" fill="currentColor" font-family="serif">THE SUN</text></svg>
+
+    <svg class="tarot-card-float" style="width:65px;top:72%;right:5%;transform:rotate(-10deg);" viewBox="0 0 60 100"><rect x="2" y="2" width="56" height="96" rx="5" ry="5" stroke="currentColor" stroke-width="2" fill="none"/><rect x="7" y="7" width="46" height="86" rx="3" ry="3" stroke="currentColor" stroke-width="1" fill="none"/><line x1="15" y1="50" x2="45" y2="50" stroke="currentColor" stroke-width="1.5"/><line x1="30" y1="15" x2="30" y2="45" stroke="currentColor" stroke-width="1.5"/><line x1="30" y1="55" x2="30" y2="85" stroke="currentColor" stroke-width="1.5"/><circle cx="30" cy="50" r="4" stroke="currentColor" stroke-width="1" fill="none"/><text x="30" y="85" text-anchor="middle" font-size="5.5" fill="currentColor" font-family="serif">THE WORLD</text></svg>
+
+    <svg class="tarot-card-float" style="width:55px;top:40%;left:50%;transform:rotate(-6deg);" viewBox="0 0 60 100"><rect x="2" y="2" width="56" height="96" rx="5" ry="5" stroke="currentColor" stroke-width="2" fill="none"/><rect x="7" y="7" width="46" height="86" rx="3" ry="3" stroke="currentColor" stroke-width="1" fill="none"/><path d="M15,50 Q30,20 45,50 Q30,80 15,50" stroke="currentColor" stroke-width="1.5" fill="none"/><text x="30" y="85" text-anchor="middle" font-size="5.5" fill="currentColor" font-family="serif">WHEEL</text></svg>
+
+    <svg class="tarot-card-float" style="width:75px;top:85%;left:30%;transform:rotate(15deg);" viewBox="0 0 60 100"><rect x="2" y="2" width="56" height="96" rx="5" ry="5" stroke="currentColor" stroke-width="2" fill="none"/><rect x="7" y="7" width="46" height="86" rx="3" ry="3" stroke="currentColor" stroke-width="1" fill="none"/><circle cx="30" cy="40" r="12" stroke="currentColor" stroke-width="1.5" fill="none"/><line x1="30" y1="28" x2="30" y2="15" stroke="currentColor" stroke-width="1.5"/><line x1="42" y1="40" x2="52" y2="40" stroke="currentColor" stroke-width="1.5"/><line x1="18" y1="40" x2="8" y2="40" stroke="currentColor" stroke-width="1.5"/><text x="30" y="68" text-anchor="middle" font-size="5.5" fill="currentColor" font-family="serif">HIGH</text><text x="30" y="76" text-anchor="middle" font-size="5.5" fill="currentColor" font-family="serif">PRIESTESS</text></svg>
+  </div>
+
   <!-- NAVBAR -->
   <nav class="navbar navbar-expand-lg site-nav">
     <div class="container">
@@ -1283,60 +1353,6 @@
     <p class="scroll-hint">&#8595;&nbsp; Scroll to explore</p>
   </section>
 
-  <hr class="gold-hr">
-
-  <!-- ABOUT -->
-  <section class="about-section">
-    <div class="container">
-      <div class="row align-items-center g-4 g-lg-5">
-        <div class="col-12 col-lg-5">
-          <span class="section-label">About Muskaan</span>
-          <h2 class="section-title mb-4" style="font-size:clamp(1.9rem,3.5vw,2.8rem);">Helping you see<br>with clarity
-            &amp; heart.</h2>
-          <p class="text-mc mb-3" style="font-size:.95rem;line-height:1.85;">I'm Muskaan &mdash; an intuitive tarot
-            reader with a background in Psychology. I use tarot as a tool to help you understand your situations,
-            emotions, and patterns with more clarity. My readings aren't about telling you what to do &mdash; they're
-            about helping you see things from a deeper perspective so you can make decisions that feel right for you.
-          </p>
-          <p class="text-mc mb-0" style="font-size:.95rem;line-height:1.85;">I'm also a yoga enthusiast, and I've always
-            been drawn to practices that support emotional and spiritual healing. Before focusing on tarot, I spent
-            several years working in animal welfare and social impact &mdash; which taught me a lot about empathy,
-            patience, and holding space for different life journeys.</p>
-        </div>
-        <div class="col-12 col-lg-6 offset-lg-1">
-          <div class="d-flex flex-column gap-3">
-            <div class="promise-card">
-              <span class="promise-icon">&#9672;</span>
-              <div>
-                <h4>Psychology-backed clarity</h4>
-                <p>My background in psychology means I understand how the mind works &mdash; readings go beyond cards
-                  into your actual patterns and emotions.</p>
-              </div>
-            </div>
-            <div class="promise-card">
-              <span class="promise-icon">&#9672;</span>
-              <div>
-                <h4>A safe, honest space</h4>
-                <p>I hold space for all kinds of journeys. Whatever you bring &mdash; relationships, identity, career,
-                  grief &mdash; you'll be met with empathy and zero judgment.</p>
-              </div>
-            </div>
-            <div class="promise-card">
-              <span class="promise-icon">&#9672;</span>
-              <div>
-                <h4>Deeper perspective, not predictions</h4>
-                <p>I don't tell you what will happen. I help you see your situation from a deeper angle so your own
-                  decisions feel grounded and right.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <hr class="gold-hr">
-
   <!-- FOUNDER -->
   <section class="founder-section" id="founder">
     <div class="container">
@@ -1344,12 +1360,15 @@
         <div class="col-12 col-md-5 d-flex justify-content-center justify-content-md-start">
           <div class="founder-img-wrap">
             <div class="founder-img-frame">
-              <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=600&q=80&auto=format&fit=crop"
+              <img src="Images/muskan.jpeg"
                 alt="Muskaan &mdash; Intuitive Tarot Reader" loading="lazy" />
             </div>
             <div class="founder-badge">
               <span class="badge-num">7+</span>
               <span class="badge-label">Years of Practice</span>
+            </div>
+            <div style="position:absolute;top:-2rem;right:-2.5rem;width:90px;height:110px;border:1px solid var(--border);overflow:hidden;display:none;" class="d-lg-block">
+              <img src="Images/muskan-2.jpeg" alt="" style="width:100%;height:100%;object-fit:cover;filter:grayscale(15%) sepia(5%);" loading="lazy">
             </div>
           </div>
         </div>
@@ -1431,7 +1450,7 @@
         <div class="col-12 col-md-9 col-lg-7">
           <span class="section-label">Who This Is For</span>
           <h2 class="section-title mb-4" style="font-size:clamp(1.9rem,4vw,3.2rem);">You don't need to be <em
-              style="font-style:italic;color:var(--green);filter:brightness(1.4)">lost</em> &mdash;<br>you just need to
+              style="font-style:italic;color:var(--green);filter:brightness(1.6)">lost</em> &mdash;<br>you just need to
             see clearly</h2>
           <p class="text-mc mb-2" style="font-size:1rem;line-height:1.85;">Most of my clients aren't in crisis. They're
             thoughtful people in the middle of something real &mdash; and they want one honest conversation outside of
@@ -1786,6 +1805,14 @@
       </div>
     </div>
   </section>
+
+  <!-- SHELTER BANNER -->
+  <div class="shelter-banner">
+    <div class="container d-flex align-items-center justify-content-center gap-3 flex-wrap">
+      <img src="Images/muskandog.jpeg" alt="" style="width:44px;height:44px;object-fit:cover;border-radius:50%;border:1px solid var(--border);opacity:.9;" loading="lazy">
+      <p>&#128062;&nbsp; <strong>A portion of every reading goes to an animal shelter.</strong> &nbsp;Because every life &mdash; human or otherwise &mdash; deserves care.</p>
+    </div>
+  </div>
 
   <!-- BOOKING CTA -->
   <section class="booking-section" id="book">
